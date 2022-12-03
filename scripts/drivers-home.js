@@ -3,13 +3,13 @@ const searchButton = document.getElementById("search-button");
 const resultsContainer = document.querySelector("#filtered-results");
 let resultingDrivers = [];
 
-const data = getDriverNames();
-console.log(data);
-searchButton.addEventListener("click", () => {
-    const queryText = searchField.value;
-    console.log(queryText);
-    getDriverNames(queryText);
-});
+getDriverNames();
+// console.log(data);
+// searchButton.addEventListener("click", () => {
+//     const queryText = searchField.value;
+//     console.log(queryText);
+//     getDriverNames(queryText);
+// });
 
 
 async function getDriverNames() {
