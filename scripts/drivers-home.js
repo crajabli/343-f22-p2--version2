@@ -20,7 +20,16 @@ async function getDriverNames() {
     const driverCards = driversJson.MRData.DriverTable.Drivers.map(driverToCard);
     let filteredDriverCards = driverCards;
     resultsContainer.innerHTML = filteredDriverCards.join("");
-    return driversJson;
+
+    
+    searchField.addEventListener("input", (ev) => {
+        ev.preventDefault;
+        const queryText = searchField.value;
+        filteredDriverCards = driverCards.filter((card) =>
+            filterDriverCard(card, queryText)
+        );
+        resultsContainer.innerHTML = filteredDriverCards.join("");
+    });
 }
 
 
@@ -48,16 +57,11 @@ const driverToCard = ({
 };
 
 
-const filterCourseCard = (markup, query) => {
+const filterDriverCard = (markup, query) => {
     console.log(markup, query);
     return markup.toLowerCase().includes(query.toLowerCase());
   };
 
-searchField.addEventListener("input", (ev) => {
-    ev.preventDefault;
-    const queryText = searchField.value;
-    
-});
 
 
 
