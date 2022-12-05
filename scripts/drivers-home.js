@@ -2,18 +2,30 @@ const searchField = document.querySelector('input[name="query-text"]');
 const searchButton = document.getElementById("search-button");
 const resultsContainer = document.querySelector("#filtered-results");
 let resultingDrivers = [];
+const year2016 = document.getElementById("2016_drivers");
+const year2022 = document.getElementById("2022_drivers");
+const year2020 = document.getElementById("2020_drivers");
 
-getDriverNames();
-// console.log(data);
-// searchButton.addEventListener("click", () => {
-//     const queryText = searchField.value;
-//     console.log(queryText);
-//     getDriverNames(queryText);
-// });
+getDriverNames(2022);
+
+year2016.addEventListener("click", (ev) => {
+    getDriverNames(2016);
+});
+
+year2020.addEventListener("click", (ev) => {
+    getDriverNames(2020);
+});
+
+year2022.addEventListener("click", (ev) => {
+    getDriverNames(2022);
+});
 
 
-async function getDriverNames() {
-    const response= await fetch(`https://ergast.com/api/f1/2022/drivers.json`);
+
+
+
+async function getDriverNames(year) {
+    const response= await fetch(`https://ergast.com/api/f1/${year}/drivers.json`);
     const driversJson = await response.json();
     console.log("drivers array");
     console.log(driversJson);   
@@ -43,7 +55,7 @@ const driverToCard = ({
     const driverTemplate = `
             <div class="col">
                 <div class="card text-center" style="width: 18rem;">
-                    <img src="images/${givenName}.jpg" class="card-img-top" alt="...">
+                    <img src="images/${familyName}.jpg" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">${givenName} ${familyName}</h5>
                     </div>
