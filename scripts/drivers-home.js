@@ -21,17 +21,53 @@ year2022.addEventListener("click", (ev) => {
 });
 
 
+// async function getDriverPicture(givenName, familyName) {
+//     const response = await fetch(`https://en.wikipedia.org/w/api.php?action=query&titles=${givenName}%20${familyName}&prop=pageimages&format=json&formatversion=2&pithumbsize=250`)
+//     const pictureJson = await response.json();
+//     console.log(pictureJson);
+// }
 
+
+async function getQuote() {
+    const response = await fetch(`https://api.quotable.io/random`);
+    const quoteJson = await response.json();
+    // console.log(quoteJson.content);
+    return quoteJson;
+}
 
 
 async function getDriverNames(year) {
     const response= await fetch(`https://ergast.com/api/f1/${year}/drivers.json`);
     const driversJson = await response.json();
-    console.log("drivers array");
-    console.log(driversJson);   
-    const driverCards = driversJson.MRData.DriverTable.Drivers.map(driverToCard);
+    console.log("drivers picture test");
+    // console.log(getQuote());
+    // console.log(getDriverPicture("Lewis", "Hamilton"));
+    // console.log(driversJson);   
+    const driverData = driversJson.MRData.DriverTable.Drivers;
+
+    const updatedDriverData = await Promise.all(driverData.map(async (driver) => {
+        const object = await getQuote();
+        const quote = object.content;
+        driver.quote = quote;
+        return driver;
+
+    }))
+    const driverCards = updatedDriverData.map(driverToCard);
+
+
+    // const updatedCards = await driverCards.map(async (card) => {
+    //     // console.log("quotes");
+    //     var object = await getQuote().content;
+    //     var quote = object.content;
+    //     console.log(quote);
+
+    //     var quoteCard = card.getElementById("quotes");
+    //     quoteCard.innerHTML = await getQuote();
+    // });
     let filteredDriverCards = driverCards;
+    // let filteredDriverCards = updatedCards;
     resultsContainer.innerHTML = filteredDriverCards.join("");
+    
 
     
     searchField.addEventListener("input", (ev) => {
@@ -51,7 +87,8 @@ const driverToCard = ({
     familyName,
     nationality,
     dateOfBirth,
-}) => {
+    quote,
+}   ) => {
     const driverTemplate = `
             <div class="col">
                 <div class="card text-center" style="width: 18rem;">
@@ -62,6 +99,7 @@ const driverToCard = ({
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">${nationality}</li>
                         <li class="list-group-item">${dateOfBirth}</li>
+                        <li class="list-group-item" id="quotes"> ${quote}</li>
                     </ul>
                 </div>
             </div>`;
@@ -70,7 +108,7 @@ const driverToCard = ({
 
 
 const filterDriverCard = (markup, query) => {
-    console.log(markup, query);
+    // console.log(markup, query);
     return markup.toLowerCase().includes(query.toLowerCase());
   };
 
